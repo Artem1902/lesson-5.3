@@ -20,11 +20,24 @@ export default {
   },
   methods: {
     onBuy(productId) {
-      const newProduct = this.productsList.find(item => item.id === productId);
-      this.purchasersList.push(newProduct);
+      let isAlreadyAdded = this.purchasersList.some(item => item.id === productId);
+      if (!isAlreadyAdded) {
+        let newProduct = this.productsList.find(item => item.id === productId);
+        newProduct = {...newProduct, quantity: 1};
+        this.purchasersList.push(newProduct);
+      } else {
+        let findInPurchase = this.purchasersList.find(item => item.id === productId);
+        findInPurchase.quantity += 1;
+      }
+
     },
     onDeleteProduct(productId) {
       this.purchasersList = this.purchasersList.filter(item => item.id !== productId);
+    },
+    changeQuantity({prodId, quantity}) {
+      let product = this.purchasersList.find(item => item.id === prodId);
+      product.quantity = product.quantity + quantity;
+      console.log(this.purchasersList)
     }
   }
 }
@@ -42,7 +55,9 @@ export default {
     <div v-if="purchasersList.length > 0" class="cart">
       <product-cart
           :purchasersList='purchasersList'
-          @deleteProduct='onDeleteProduct'></product-cart>
+          @deleteProduct='onDeleteProduct'
+          @quantity='changeQuantity'
+      ></product-cart>
     </div>
     <p v-else>Кошик порожній...</p>
   </div>
@@ -52,6 +67,7 @@ export default {
 .container {
   display: flex;
   gap: 50px;
+  max-width: 1020px;
 }
 
 .cards-list {

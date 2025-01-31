@@ -11,6 +11,16 @@ export default {
       required: true
     }
   },
+  computed: {
+    orderSum (){
+      return this.purchasersList.reduce((acc, cur) => acc + (cur.price * cur.quantity), 0);
+    }
+  },
+  methods: {
+    onSubmit(){
+      alert ('Успіх!')
+    }
+  }
 }
 </script>
 
@@ -20,9 +30,13 @@ export default {
     <product-cart-item v-for="product in purchasersList"
                        :key="product.id"
                        :product='product'
-                       @totalSum='onTotalSum'
                        @deleteProduct="$emit('deleteProduct', $event)"
+                       @quantity = "$emit('quantity', $event)"
     ></product-cart-item>
+    <div class="sum">
+      Загальна сума покупки: {{orderSum}}$
+    </div>
+    <button @click = 'onSubmit' class="btn">Оформити замовлення</button>
   </div>
 </template>
 
@@ -31,5 +45,13 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+.btn {
+  background-color: green;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>

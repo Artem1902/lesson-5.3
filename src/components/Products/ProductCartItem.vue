@@ -7,27 +7,22 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      quantity: 1
+  computed: {
+    totalSum() {
+      return this.product.quantity * this.product.price
     }
   },
-  computed: {
-    totalSum () {
-        return this.quantity * this.product.price
-      }
-    },
   methods: {
-    onDelete(){
+    onDelete() {
       this.$emit('deleteProduct', this.product.id)
     },
     dec() {
-      if (this.quantity > 1) {
-        this.quantity -= 1
+      if (this.product.quantity > 1) {
+       this.$emit('quantity', {prodId: this.product.id, quantity: -1})
       }
     },
     inc() {
-      this.quantity += 1
+      this.$emit('quantity', {prodId: this.product.id, quantity: 1})
     }
   },
 }
@@ -46,7 +41,7 @@ export default {
     </div>
     <div class="bottom">
       <button class="btn" @click='dec'>-</button>
-      {{ quantity }}
+      {{ product.quantity }}
       <button class="btn" @click='inc'>+</button>
       <span>{{ totalSum }}</span>
     </div>
